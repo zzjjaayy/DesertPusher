@@ -28,6 +28,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleObserver
 import com.example.android.dessertpusher.databinding.ActivityMainBinding
 import timber.log.Timber
+import java.sql.Time
 
 class MainActivity : AppCompatActivity(), LifecycleObserver {
 
@@ -151,8 +152,33 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
         return super.onOptionsItemSelected(item)
     }
 
+    // called when the activity is made visible
     override fun onStart() {
         super.onStart()
         Timber.i("onStart was called")
+    }
+
+    // called when the activity is in focus{means can be interacted with}
+    override fun onResume() {
+        super.onResume()
+        Timber.i("onResume was Called")
+    }
+
+    //called when the activity is cleared from recent apps
+    override fun onDestroy() {
+        super.onDestroy()
+        Timber.i("onDestroy was called")
+    }
+
+    // called when the activity loses focus but sill visible {try opening the share shade in the app}
+    override fun onPause() {
+        super.onPause()
+        Timber.i("onPause was called")
+    }
+
+    // called when an activity isn't visible
+    override fun onStop() {
+        super.onStop()
+        Timber.i("onStop was called")
     }
 }
