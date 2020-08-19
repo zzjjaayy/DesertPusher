@@ -30,6 +30,11 @@ import com.example.android.dessertpusher.databinding.ActivityMainBinding
 import timber.log.Timber
 import java.sql.Time
 
+//constants to be used
+private const val KEY_REVENUE = "key_revenue"
+private const val KEY_SOLD = "key_sold"
+private const val KEY_TIMER = "key_timer"
+
 class MainActivity : AppCompatActivity(), LifecycleObserver {
 
     private var revenue = 0
@@ -77,6 +82,13 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
 
         binding.dessertButton.setOnClickListener {
             onDessertClicked()
+        }
+
+        // this is the block which retrieves the value in bundle
+        if(savedInstanceState != null){
+            revenue = savedInstanceState.getInt(KEY_REVENUE)
+            dessertsSold = savedInstanceState.getInt(KEY_SOLD)
+            dessertTimer.secondsCount = savedInstanceState.getInt(KEY_TIMER)
         }
 
         // Set the TextViews to the right values
@@ -152,6 +164,21 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
             R.id.shareMenuButton -> onShare()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    // called after onStop since API level 28
+    // called to save the data if app is killed by the system
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putInt(KEY_REVENUE, revenue)
+        outState?.putInt(KEY_SOLD, dessertsSold)
+        outState?.putInt(KEY_TIMER, dessertTimer.secondsCount)
+        Timber.i("Saved")
+    }
+
+    //called after onStart
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
     }
 
     // called when the activity is made visible
