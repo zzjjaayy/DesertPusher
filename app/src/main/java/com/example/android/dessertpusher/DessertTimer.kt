@@ -17,26 +17,15 @@
 package com.example.android.dessertpusher
 
 import android.os.Handler
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import timber.log.Timber
 
-/**
- * This is a class representing a timer that you can start or stop. The secondsCount outputs a count of
- * how many seconds since it started, every one second.
- *
- * -----
- *
- * Handler and Runnable are beyond the scope of this lesson. This is in part because they deal with
- * threading, which is a complex topic that will be covered in a later lesson.
- *
- * If you want to learn more now, you can take a look on the Android Developer documentation on
- * threading:
- *
- * https://developer.android.com/guide/components/processes-and-threads
- *
- */
-class DessertTimer {
 
-    // The number of seconds counted since the timer started
+class DessertTimer(lifecycle: Lifecycle) : LifecycleObserver {
+//added a lifecycle object parameter.
+
     var secondsCount = 0
 
     /**
@@ -46,7 +35,13 @@ class DessertTimer {
     private var handler = Handler()
     private lateinit var runnable: Runnable
 
+    init {
+        lifecycle.addObserver(this)
+    } // this activity is added as an observer to the lifecycle object that is passed a parameter
 
+
+    // added an annotation of executing this function when the onStart method of the observed activity is called
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun startTimer() {
         // Create the runnable action, which prints out a log and increments the seconds counter
         runnable = Runnable {
@@ -65,6 +60,8 @@ class DessertTimer {
         // In this case, no looper is defined, and it defaults to the main or UI thread.
     }
 
+    // added an annotation of executing this function when the onStop method of the observed activity is called
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     fun stopTimer() {
         // Removes all pending posts of runnable from the handler's queue, effectively stopping the
         // timer
